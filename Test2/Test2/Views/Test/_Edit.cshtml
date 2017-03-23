@@ -1,0 +1,119 @@
+﻿
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+@using DTOS
+@model EmployeeDto
+@using Test2.Controllers
+@{
+
+    List<SelectListItem> ListItem = new List<SelectListItem>();
+}
+@{
+    ListItem.Add(new SelectListItem
+    {
+        Text = "IT",
+        Value = "IT"
+    });
+    ListItem.Add(new SelectListItem
+    {
+        Text = "HR",
+        Value = "HR"
+    });
+}
+
+<html>
+<body>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <div class="container" style="width:60%">
+        @using (Html.BeginForm("editUpdate", "Test", FormMethod.Post, new { @id = "formEdit" }))
+        {
+            <table style="width:100%">
+                <tr style="display:none">
+                    <td>Id</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Id, new { @id = "Id" })</td>
+
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+
+                    <td>Name</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Name, new { @id = "name" })</td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> <span id="ValidationName"></span></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>Age</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Age, new { @id = "age" })</td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <span id="ValidationAge"></span>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>Department</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.DropDownListFor(a => a.Department, ListItem, "Select Item")</td>
+                </tr>
+                <tr>
+
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>Band</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        @Html.RadioButtonFor(a => a.Band, "A") A
+                        @Html.RadioButtonFor(a => a.Band, "B") B
+                        @Html.RadioButtonFor(a => a.Band, "C") C
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><button id="editUpdate" class="btn btn-danger" type="button" data-dismiss="modal">Edit</button></td>
+                    <td><button type="button" class="btn alert-info" data-dismiss="modal">Close</button></td>
+                </tr>
+
+            </table>
+        }
+    </div>
+    <div id="Details">
+    </div>
+    <script>
+        $("#editUpdate").click(function () {
+            var dto = $("#formEdit").serializeArray();
+            $.ajax({
+                url: '@Url.Action("editUpdate","Test")',
+                type: 'Post',
+                data: dto,
+                success: function (data) {
+                    if (data != null) {
+                        $("#details").empty();
+                        $("#details").html(data);
+                    }
+                },
+                error: function (dataReturn) {
+
+                }
+            })
+        });
+    </script>
+</body>
+</html>
+

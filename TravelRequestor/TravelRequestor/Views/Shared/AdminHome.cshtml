@@ -1,0 +1,120 @@
+﻿@using DTOs
+@model IEnumerable<ReqDto>
+@{
+    ViewBag.Title = "AdminHome";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    List<SelectListItem> ActionList = new List<SelectListItem>();
+}
+@{
+    ActionList.Add(new SelectListItem
+    {
+        Text = "Rejected",
+        Value = "Rejected"
+    });
+    ActionList.Add(new SelectListItem
+    {
+        Text = "Granted",
+        Value = "Granted"
+    });
+}
+
+
+<html>
+<head>
+
+</head>
+<body>
+    <h2>Pending Requests</h2>
+    <table>
+        <tr>
+            <th>Employee</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Cause</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>PID</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Source</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Destination</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>FromDate</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>ToDate</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Action</th>
+        </tr>
+
+        @if (Model != null)
+        {
+
+            foreach (var item in Model)
+            {
+                string Todate = item.Todate.ToString("dd-MM-yyyy");
+                string FromDate = item.Fromdate.ToString("dd-MM-yyyy");
+                <tr>
+                    <td>@item.empid</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.cause</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.pid</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.source</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.Destination</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@FromDate</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@Todate</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.DropDownList("..Action..", ActionList, "Select Item", new { id = @item.Rid, onchange = "ChangeAction(" + @item.Rid + ");" })</td>
+                </tr>
+            }
+        }
+
+
+    </table>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.js"></script>
+    <script>
+
+        function ChangeAction(id) {
+            var status = $("#" + id).val();
+            console.log(status);
+            $.ajax({
+                url: '@Url.Action("ActionUpdate","Admin")',
+                type: "Post",
+                data: { 'mode': status, 'Rid': id },
+                success: function (data) {
+                    if (data.message == "Success") {
+                        bootbox.alert("Edited Successsfully");
+                    }
+                    else {
+                        bootbox.alert("Sorry Try Again Later");
+                    }
+                }
+
+            });
+
+        }
+    </script>
+
+</body>
+</html>
+

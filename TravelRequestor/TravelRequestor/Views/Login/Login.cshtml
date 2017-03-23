@@ -1,0 +1,63 @@
+﻿@using DTOs
+@model UserDto
+@using TravelRequestor.Controllers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/Login.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <title>Login</title>
+
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @id = "LoginForm" }))
+        {
+            <div class="login">
+                @Html.TextBoxFor(m => m.empId, new { placeholder="EmployeeID",@class ="LoginForm in"})
+                @Html.TextBoxFor(m => m.Password, new { placeholder = "Password", @class = "LoginForm in" })  
+                <input id="loginButton" type="button" value="Login in" class="ButtonCss" onclick="LoginCheck();" />
+            </div>
+        }
+     </div>  
+    
+    <script src="~/Scripts/jquery3.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script>
+        function LoginCheck() {
+            var dto = $("#LoginForm").serializeArray();
+            console.log(dto);
+            $.ajax({
+                url: '@Url.Action("Login1","Login")',
+                type: 'Post',
+                data: dto,
+                success: function (data) {
+                    if (data.status == 200) {
+                        if (data.role == "Admin") {
+                            window.location.href="Login/AdminHome";
+                        }
+                        else if (data.role == "User") {
+                            window.location.href = "Login/UserHome";
+                        }
+                       
+                    }
+                    else {
+                       bootbox.alert("Sorry Login Unsuccessfull")
+                    }
+
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+</html>

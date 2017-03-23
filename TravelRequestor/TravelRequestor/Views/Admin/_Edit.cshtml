@@ -1,0 +1,98 @@
+﻿<script src="~/Scripts/jquery-3.1.1 (1).js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+@using DTOs
+@model UserDto
+@using TravelRequestor.Controllers
+
+<html>
+<body>
+    
+    <div class="container" style="width:60%">
+        @using (Html.BeginForm("editUpdate", "Admin", FormMethod.Post, new { @id = "formEdit" }))
+        {
+            <table style="width:100%">
+                <tr style="display:none">
+                    <td>Id</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.empId, new { @id = "Id" })</td>
+
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+
+                    <td>Name</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Name, new { @id = "name" })</td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> <span id="ValidationName"></span></td>
+                    <td>&nbsp;</td>
+                </tr>
+              
+                <tr>
+
+                    <td>User Name</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.UserName, new { @id = "userName" })</td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <span id="ValidationUser"></span>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><button id="editUpdate" class="btn btn-danger" type="button" data-dismiss="modal">Edit</button></td>
+                    <td><button type="button" class="btn alert-info" data-dismiss="modal">Close</button></td>
+                </tr>
+
+            </table>
+        }
+    </div>
+   
+    <script>
+        $("#editUpdate").click(function () {
+            if ($("#name").val() == null || $("#name").val() == "") {
+                $("#ValidationName").text("Please Enter Name");
+                isTrue = false;
+            }
+            else if ($("#userName").val() == null || $("#userName").val() == "") {
+                $("#ValidationUser").text("Please Enter User Name");
+                isTrue = false;
+            }
+            else {
+                var dto = $("#formEdit").serializeArray();
+                $.ajax({
+                    url: '@Url.Action("editUpdate","Admin")',
+                    type: 'Post',
+                    data: dto,
+                    success: function (data) {
+                        if (data != null) {
+                            $("#details").empty();
+                            $("#details").html(data);
+                        }
+                    },
+                    error: function (dataReturn) {
+
+                    }
+                })
+            }
+            
+        });
+    </script>
+</body>
+</html>
+
+

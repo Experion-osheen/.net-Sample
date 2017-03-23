@@ -1,0 +1,10 @@
+﻿@using SampleMvc.Models
+@using SampleMvc.Controllers
+@model List<Employee>
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        @item.Age
+    }
+}

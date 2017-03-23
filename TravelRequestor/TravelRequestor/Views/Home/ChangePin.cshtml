@@ -1,0 +1,56 @@
+﻿@using DTOs
+@model UserDto
+
+@{
+    ViewBag.Title = "Change Pin";
+}
+
+<html>
+<head>
+    <link href="~/Content/Login.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1 (1).js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootbox.js"></script>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("User", "ChangePin", FormMethod.Post, new { @id = "LoginForm" }))
+        {
+            <div class="login">
+
+                <input id="New1" type="text" placeholder="New Password" class="LoginForm in" />
+                @Html.TextBoxFor(m => m.Password, new { placeholder = "Confirm New Pin", @class = "LoginForm in", @id = "new2" })
+                <input id="changePin" type="button" value="Login in" class="ButtonCss" onclick="ChangePin();" />
+            </div>
+        }
+    </div>
+    <script>
+        function ChangePin() {
+            if ($("#New1").val() == "" || $("New2").val() == "") {
+                bootbox.alert("Please Enter Valid Fields");
+            }
+            else if ($("#New1").val() == $("#New2").val()) {
+                bootbox.alert("oops.....Passwords doesnt match ");
+            }
+            else {
+                var password = $("#New1").val();
+                $.ajax({
+                    url: '@Url.Action("ChangePin","User")',
+                    type: "POST",
+                    data: { password: password },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.status == "Success") {
+                            bootbox.alert("Pasword Changed successfully");
+                        }
+                        else {
+                            bootbox.alert("Sorry try again later");
+                        }
+                    }
+                });
+            }
+
+        }
+    </script>
+</body>
+</html>

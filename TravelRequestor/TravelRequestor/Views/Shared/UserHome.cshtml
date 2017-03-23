@@ -1,0 +1,222 @@
+﻿@using DTOs
+@model ReqDto
+@using TravelRequestor.Controllers
+@{
+    ViewBag.Title = "UserHome";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var orderList = Session["ListItem"] as List<ProjectDto>;
+}
+<html>
+<head>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1 (1).js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/themes/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+    <script src="~/Scripts/bootbox.js"></script>
+</head>
+<body onload="id();">
+    <h2>Request Travel</h2>
+    <div class="container">
+        @using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { @id = "formData" }))
+        {
+            <table>
+                <tr>
+                    <td>PId</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        @{
+                            List<SelectListItem> orderLists = new List<SelectListItem>();
+                            orderLists.Add(new SelectListItem
+                            {
+                                Text = "Select Order",
+                                Value = "0",
+                                Selected = true
+                            });
+
+                            if (orderList!=null)
+                            {
+
+                                foreach (var element in orderList)
+                                {
+                                    orderLists.Add(new SelectListItem
+                                    {
+                                        Text = element.Pname.ToString(),
+                                        Value = element.Pid.ToString()
+                                    });
+                                }
+
+
+                            }
+
+                        }
+
+                        @Html.DropDownListFor(model => model.pid, orderLists, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.pid, "", new { @class = "text-danger" })
+                   
+                    </td>
+                    <td><span id="ValidationPId"></span></td>
+                    <td>Cause</td>
+                    <td>@Html.TextBoxFor(a => a.cause, new { @id = "Cause", @class = "clear" })</td>
+                    <td><span id="ValidationCause"></span></td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td>Destination</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Destination, new { @id = "Destination", @class = "clear" })</td>
+                    <td><span id="ValidationDestination"></span></td>
+                    <td>Source</td>>
+                    <td>@Html.TextBoxFor(a => a.source, new { @id = "Source", @class = "clear" })</td>
+                    <td><span id="ValidationSource"></span></td>
+                </tr>
+                <tr style="display:none">
+                    <td>@Html.TextBoxFor(a => a.empid, new { @id = "empid", @class = "clear" })</td>
+                    <td>@Html.TextBoxFor(a => a.mode, new { @id = "mode", @class = "clear" })</td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td>Fromdate</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Fromdate, new { @id = "Fromdate", @class = "clear" })</td>
+                    <td> <span id="ValidationFromdate"></span></td>
+                    <td>Todate</td>
+                    <td>@Html.TextBoxFor(a => a.Todate, new { @id = "Todate", @class = "clear" })</td>
+                    <td>
+                        <span id="ValidationTodate"></span>
+                    </td>
+                    <td>noOfDays</td>
+                    <td>@Html.TextBoxFor(a => a.noDays, new { @id = "noDays", @class = "clear" })</td>
+                    <td>
+                        <span id="Validationno"></span>
+                    </td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td><button id="add" class="btn btn-danger" type="button" onclick="Add()">ADD</button></td>
+                    <td><button id="View" class="btn btn-info" type="button" onclick="view()">View</button></td>
+                </tr>
+
+            </table>
+        }
+        <div id="RequestU"></div>
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <center><h2 class="modal-title">Edit Request</h2></center>
+                    </div>
+                    <div class="modal-body">
+                        <p id="EditModal">Some text in the modal.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        o123();
+            $('#Fromdate').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                daysOfWeekDisabled: "0",
+                autoclose: true,
+                todayHighlight: true
+            });
+            $('#Todate').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                daysOfWeekDisabled: "0",
+                autoclose: true,
+                todayHighlight: true
+            });
+
+
+
+            function parseDate(str) {
+                var mdy = str.split('/');
+                return new Date(mdy[2], mdy[1] - 1, mdy[0]);
+            }
+
+            function daydiff(first, second) {
+                return Math.round((second - first) / (1000 * 60 * 60 * 24));
+            }
+
+
+
+
+        function view() {
+
+            $.ajax({
+                url: '@Url.Action("Views", "User")',
+                type: "GET",
+                success: function (data) {
+                    if (data != null) {
+
+                        $("#RequestU").html(data);
+                    }
+                }
+
+            });
+        }
+        function id() {
+            $.ajax({
+                url: '@Url.Action("id", "User")',
+                type: "POST",
+                success: function (data) {
+                    console.log(data);
+                    $("#empid").val(data.empid)
+                }
+            });
+        }
+        $("#noDays").click(function () {
+            $("#noDays").val((daydiff(parseDate($('#Fromdate').val()), parseDate($('#Todate').val()))));
+        });
+        function Add() {
+            $("#mode").val("Pending");
+            $("#noDays").val((daydiff(parseDate($('#Fromdate').val()), parseDate($('#Todate').val()))));
+            var dto = $("#formData").serializeArray();
+            $.ajax({
+                url: '@Url.Action("AddRequest","User")',
+                type: "POST",
+                data: dto,
+                success: function (data) {
+                    console.log(data);
+                    if (data != null) {
+                        $("#RequestU").html(data);
+                    }
+                }
+            });
+        }
+        function o123() {
+            $.ajax({
+                url: '@Url.Action("GetProject","User")',
+                type: "GET",
+                success: function (data) {
+                   
+                    if (data != null) {
+                        console.log(data.Data);
+                        data.Data.forEach(function(item){
+                            
+                        });
+                      
+                        
+                      
+                    }
+                }
+            });
+        };
+    </script>
+
+
+
+</body>
+</html>

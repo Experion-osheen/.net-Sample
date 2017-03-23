@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TravelDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TravelEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Projects" EntityType="TravelDatabaseModel.Project" />
+    <EntitySet Name="Requests" EntityType="TravelDatabaseModel.Request" />
+    <EntitySet Name="UserTables" EntityType="TravelDatabaseModel.UserTable" />
+    <AssociationSet Name="FK2" Association="TravelDatabaseModel.FK2">
+      <End Role="Project" EntitySet="Projects" />
+      <End Role="Request" EntitySet="Requests" />
+    </AssociationSet>
+    <AssociationSet Name="FK1" Association="TravelDatabaseModel.FK1">
+      <End Role="UserTable" EntitySet="UserTables" />
+      <End Role="Request" EntitySet="Requests" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="Pid" />
+    </Key>
+    <Property Name="Pid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Pname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Requests" Relationship="TravelDatabaseModel.FK2" FromRole="Project" ToRole="Request" />
+  </EntityType>
+  <EntityType Name="Request">
+    <Key>
+      <PropertyRef Name="Rid" />
+    </Key>
+    <Property Name="Rid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="empid" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="pid" Type="Int32" Nullable="false" />
+    <Property Name="cause" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Fromdate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Todate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="noDays" Type="Int32" Nullable="false" />
+    <Property Name="source" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Destination" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="mode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Project" Relationship="TravelDatabaseModel.FK2" FromRole="Request" ToRole="Project" />
+    <NavigationProperty Name="UserTable" Relationship="TravelDatabaseModel.FK1" FromRole="Request" ToRole="UserTable" />
+  </EntityType>
+  <EntityType Name="UserTable">
+    <Key>
+      <PropertyRef Name="empId" />
+    </Key>
+    <Property Name="empId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Requests" Relationship="TravelDatabaseModel.FK1" FromRole="UserTable" ToRole="Request" />
+  </EntityType>
+  <Association Name="FK2">
+    <End Type="TravelDatabaseModel.Project" Role="Project" Multiplicity="1" />
+    <End Type="TravelDatabaseModel.Request" Role="Request" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="Pid" />
+      </Principal>
+      <Dependent Role="Request">
+        <PropertyRef Name="pid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK1">
+    <End Type="TravelDatabaseModel.UserTable" Role="UserTable" Multiplicity="1" />
+    <End Type="TravelDatabaseModel.Request" Role="Request" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserTable">
+        <PropertyRef Name="empId" />
+      </Principal>
+      <Dependent Role="Request">
+        <PropertyRef Name="empid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

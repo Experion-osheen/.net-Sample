@@ -1,0 +1,154 @@
+﻿<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+@using DTOS
+@model EmployeeDto
+@using Test2.Controllers
+
+@{
+    ViewBag.Title = "TestView";
+    List<SelectListItem> ListItem = new List<SelectListItem>();
+}
+@{
+    ListItem.Add(new SelectListItem
+    {
+        Text = "IT",
+        Value = "IT"
+    });
+    ListItem.Add(new SelectListItem
+    {
+        Text = "HR",
+        Value = "HR"
+    });
+}
+<html>
+<body>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+ 
+    <div class="container">
+        <h2>ADD USER</h2>
+        @using (Html.BeginForm("Add", "Test", FormMethod.Post, new { @id = "formData" }))
+        {
+            <table>
+                <tr>
+                    <td>Name</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Name, new { @id = "name", @class = "clear" })</td>
+                    <td> <span id="ValidationName"></span></td>
+                    <td>Age</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Age, new { @id = "age", @class = "clear" })</td>
+                    <td>
+                        <span id="ValidationAge"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>Department</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.DropDownListFor(a => a.Department, ListItem, "Select Item")</td>
+                    <td>&nbsp;</td>
+                    <td>Band</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        @Html.RadioButtonFor(a => a.Band, "A") A
+                        @Html.RadioButtonFor(a => a.Band, "B") B
+                        @Html.RadioButtonFor(a => a.Band, "C") C
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td><button id="add" class="btn btn-danger" type="button" onclick="Add()">ADD</button></td>
+                    <td><button id="View" class="btn btn-info" type="button" onclick="view()">View</button></td>
+                </tr>
+
+            </table>
+        }
+
+    </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h2 class="modal-title">Edit Details</h2></center>
+                </div>
+                <div class="modal-body">
+                    <p id="EditModal">Some text in the modal.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="details"></div>
+    <div id="Man"></div>
+    <script>
+        function view() {
+            $.ajax({
+                url: '@Url.Action("Views","Test")',
+                type: "GET",
+                success: function (data) {
+                    if (data != null) {
+                        $("#details").html(data);
+                    }
+                }
+
+            });
+        }
+        function Add() {
+            if ($("#name").val() == null || $("#name").val() == "") {
+                $("#ValidationName").text("Please Enter Name");
+                isTrue = false;
+            }
+            if ($("#id").val() == null || $("#id").val() == "") {
+                $("#ValidationId").text("Please Enter Id");
+                isTrue = false;
+            }
+            if ($("#age").val() == null || $("#age").val() == "") {
+                $("#ValidationAge").text("Please Enter Age");
+                isTrue = false;
+            }
+            else {
+                var dto = $("#formData").serializeArray();
+                $.ajax({
+
+                    url: '@Url.Action("Add","Test")',
+                    type: "POST",
+                    data: dto,
+                    success: function (data) {
+                        if (data != null) {
+                            $("#details").html(data);
+                            $("#name").val("");
+                            $("#age").val("");
+                            $("#id").val("");
+                            $("#ValidationId").html("");
+                            $("#ValidationAge").html("");
+                            $("#ValidationName").html("");
+                        }
+                    }
+                });
+            }
+
+        }
+        $("#name").change(function () {
+            $("#ValidationName").html("");
+        });
+        $("#age").change(function () {
+            $("#ValidationAge").html("");
+        });
+    </script>
+</body>
+</html>

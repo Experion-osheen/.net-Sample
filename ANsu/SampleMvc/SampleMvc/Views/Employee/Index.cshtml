@@ -1,0 +1,56 @@
+﻿@using SampleMvc.Models
+@using SampleMvc.Controllers
+@model Employee
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    @using (Html.BeginForm("Submit", "Employee", FormMethod.Post, new { @class = "form-horizontal", @id = "submitForm"}))
+    {
+        <h1> @BaseController.GetLocalisedString("lblName")</h1>
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @id = "nameId" })
+        @Html.ValidationMessageFor(m => m.Name)
+        <span id="nameValidation"></span>
+        <h1> @BaseController.GetLocalisedString("lblAge")</h1>
+        @Html.TextBoxFor(m => m.Age, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Age)
+        @Html.CheckBoxFor(m => m.IsThere, new { @class = "form-control" })
+        <input type="button" class="btn btn-default" value="Register" id="formSubmit"/>
+    }
+
+</div>
+<div id="partailView">
+    @Html.Partial("_Partial");
+</div>
+<script>
+    $("#formSubmit").click(function () {
+        var isTrue = true;
+        if ($("#nameId").val() == null || $("#nameId").val() == "")
+        {
+            $("#nameValidation").text("Name is required");
+            isTrue = false;
+        }
+        if (isTrue == true) {
+            var postData = $("#submitForm").serializeArray();
+            $.ajax({
+                url: '@Url.Action("SubmitAjax", "Employee")',
+                type: 'POST',
+                data: postData,
+                success: function (data) {
+                    alert(data.Data);
+                    if (data != null) {
+                        $("#partailView").empty();
+                        $("#partailView").html(data.Data);
+                    }
+                },
+
+                error: function (data) {
+
+                }
+            });
+        }
+    });
+</script>

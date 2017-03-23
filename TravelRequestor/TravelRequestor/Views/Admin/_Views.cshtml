@@ -1,0 +1,98 @@
+﻿@using DTOs
+@model List<UserDto>
+
+<html>
+<body>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <h2>User Details</h2>
+    <table>
+        <tr>
+            <th>EmployeeID</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Name</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>UserName</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Delete/Edit</th>
+
+        </tr>
+        <tbody>
+            @if (Model != null)
+            {
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    <tr><td>&nbsp;</td></tr>
+                    i++;
+                    <tr>
+                        <td>@item.empId</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Name</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@item.UserName</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <button type="button" onclick="RemoveUser('@item.empId')" class="btn alert-danger" id="Delete"><span class="glyphicon glyphicon-trash"></span></button>
+                            <button type="button" class="btn alert-info" data-toggle="modal" data-target="#myModal" onclick="EditUser('@item.empId')"><span class="glyphicon glyphicon-pencil"></span></button>
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <script>
+        function RemoveUser(id) {
+            console.log("hai")
+            bootbox.confirm("Are you sure you want to delete the record?", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteUser","Admin")',
+                        type: 'Post',
+                        data: { Id: id },
+                        success: function (data) {
+                            if (data != null) {
+                                $("#details").empty();
+                                $("#details").html(data);
+                            }
+                        },
+                        error: function (dataReturn) {
+
+                        }
+
+                    })
+                }
+            });
+        }
+        function EditUser(id) {
+            $.ajax({
+                url: '@Url.Action("EditUser","Admin")',
+                type: 'Post',
+                data: { Id: id },
+                success: function (data) {
+                    if (data != null) {
+                        $("#EditModal").empty();
+                        $("#EditModal").html(data);
+                    }
+                },
+                error: function (dataReturn) {
+
+                }
+
+            })
+        }
+    </script>
+
+
+
+</body>
+</html>
+

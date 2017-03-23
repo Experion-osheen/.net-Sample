@@ -1,0 +1,121 @@
+﻿@using DTOs
+@model List<ReqDto>
+
+<html>
+<body>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <h2>Pending Requests</h2>
+      
+    <table>
+        <tr>
+            <th>Employee</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Cause</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>PID</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Source</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Destination</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>FromDate</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>ToDate</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Delete/Edit</th>
+        </tr>
+
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                string Todate = item.Todate.ToString("dd-MM-yyyy");
+                string FromDate = item.Fromdate.ToString("dd-MM-yyyy");
+                <tr>
+                    <td>@item.empid</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.cause</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.pid </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.source</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@item.Destination</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@FromDate</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@Todate</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <button type="button" onclick="RemoveRequest('@item.Rid')" class="btn alert-danger" id="Delete"><span class="glyphicon glyphicon-trash"></span></button>
+                        <button type="button" class="btn alert-info" data-toggle="modal" data-target="#myModal" onclick="EditRequest('@item.Rid')"><span class="glyphicon glyphicon-pencil"></span></button>
+                    </td>
+
+
+                </tr>
+            }
+        }
+    </table>
+
+<script>
+    
+    function RemoveRequest(id) {
+        console.log("hai")
+        bootbox.confirm("Are you sure you want to delete the record?", function (result) {
+            if (result) {
+                $.ajax({
+                    url: '@Url.Action("DeleteRequest", "User")',
+                    type: 'Post',
+                    data: { Id: id },
+                    success: function (data) {
+                        if (data != null) {
+                            $("#RequestU").empty();
+                            $("#RequestU").html(data);
+                        }
+                    },
+                    error: function (dataReturn) {
+
+                    }
+
+                })
+            }
+        });
+    }
+    function EditRequest(id) {
+        $.ajax({
+            url: '@Url.Action("EditRequest","User")',
+            type: 'Post',
+            data: { Id: id },
+            success: function (data) {
+                if (data != null) {
+                    $("#EditModal").empty();
+                    $("#EditModal").html(data);
+                }
+            },
+            error: function (dataReturn) {
+
+            }
+
+        })
+    }
+
+</script>
+    </body>
+</html>
+
+

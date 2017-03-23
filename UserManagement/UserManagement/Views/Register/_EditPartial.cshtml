@@ -1,0 +1,117 @@
+﻿
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+@model UserManagement.Models.UserDetails
+@using UserManagement.Controllers
+@{
+
+    List<SelectListItem> ListItem = new List<SelectListItem>();
+}
+@{
+    ListItem.Add(new SelectListItem
+    {
+        Text = "IT",
+        Value = "IT"
+    });
+    ListItem.Add(new SelectListItem
+    {
+        Text = "HR",
+        Value = "HR"
+    });
+}
+
+<html>
+<body>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <div class="container" style="width:60%">
+        @using (Html.BeginForm("Display", "Register", FormMethod.Post, new { @id = "form" }))
+        {
+            <table style="width:100%">
+                <tr style="display:none">
+                    <td>@HomeController.RenderRazorString("labelId")</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Id, new { @id = "id" })</td>
+
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+
+                    <td>@HomeController.RenderRazorString("LabelName")</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Name, new { @id = "name" })</td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td> <span id="ValidationName"></span></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>@BaseController.RenderRazorString("LabelAge")</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(a => a.Age, new { @id = "age" })</td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <span id="ValidationAge"></span>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>@Html.Label("Department")</td>
+                    <td>&nbsp;</td>
+                    <td>@Html.DropDownListFor(a => a.Department, ListItem, "Select Item")</td>
+                </tr>
+                <tr>
+
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+
+                    <td>@Html.Label("Band")</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        @Html.RadioButtonFor(a => a.Band, "A") A
+                        @Html.RadioButtonFor(a => a.Band, "B") B
+                        @Html.RadioButtonFor(a => a.Band, "C") C
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><button id="editUpdate" class="btn btn-danger" type="button" data-dismiss="modal">Edit</button></td>
+                    <td><button type="button" class="btn alert-info" data-dismiss="modal">Close</button></td>
+                </tr>
+
+            </table>
+        }
+    </div>
+    <div id="Details">
+    </div>
+    <script>
+        $("#editUpdate").click(function () {
+            var data = $("#form").serializeArray();
+            $.ajax({
+                url: '@Url.Action("editUpdate","Register")',
+                type: 'Post',
+                data: data,
+                success: function (data) {
+                    if (data != null) {
+                        $("#Details").empty();
+                        $("#Details").html(data);
+                    }
+                },
+                error: function (dataReturn) {
+
+                }
+            })
+        });
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+﻿@using DTOs
+@model ReqDto
+@using TravelRequestor.Controllers
+<div class="container">
+    @using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { @id = "FormEdit" }))
+    {
+
+        <div class="row">
+            <div class="col-lg-2"><label>PId</label></div>
+            <div class="col-lg-2">@Html.TextBoxFor(a => a.pid, new { @id = "Id1", @class = "clear" })</div>
+            <div class="col-lg-2"><span id="ValidationPId1"></span></div>
+            <div class="col-lg-2"><label>Cause</label></div>
+            <div class="col-lg-2">@Html.TextBoxFor(a => a.cause, new { @id = "Cause1", @class = "clear" })</div>
+            <div class="col-lg-2"><span id="ValidationCause1"></span></div>
+        </div>
+        <div>&nbsp;</div>
+        <div class="row">
+            <div class="col-lg-2"><label>Destination</label></div>
+            <div class="col-lg-2">@Html.TextBoxFor(a => a.Destination, new { @id = "Destination1", @class = "clear" })</div>
+            <div class="col-lg-2"><span id="ValidationDestination1"></span></div>
+            <div class="col-lg-2"><label>Source</label></div>
+            <div class="col-lg-2">@Html.TextBoxFor(a => a.source, new { @id = "Source1", @class = "clear" })</div>
+            <div class="col-lg-2"><span id="ValidationSource1"></span></div>
+        </div>
+        <div style="display:none">
+            @Html.TextBoxFor(a => a.empid, new { @id = "empid1", @class = "clear" })
+            @Html.TextBoxFor(a => a.mode, new { @id = "mode1", @class = "clear" })
+            @Html.TextBoxFor(a => a.Rid, new { @id = "rid1", @class = "clear"})
+        </div>
+        <div>&nbsp;</div>
+        <div class="row">
+            <div class="col-lg-4">
+                <label>Fromdate</label>
+                @Html.TextBoxFor(a => a.Fromdate, new { @id = "Fromdate1", @class = "clear" })
+                <span id="ValidationFD1"></span>
+            </div>
+            <div class="col-lg-4">
+                <label>Todate</label>
+                @Html.TextBoxFor(a => a.Todate, new { @id = "Todate1", @class = "clear" })
+                <span id="ValidationTD1"></span>
+            </div>
+            <div class="col-lg-4">
+                <label>noOfDay</label>
+                @Html.TextBoxFor(a => a.noDays, new { @id = "noDays1", @class = "clear" })
+            </div>
+        </div>
+        <div style="float: right">
+            <button id="editUpdate" class="btn btn-danger" type="button" data-dismiss="modal">Edit</button>
+            <button type="button" class="btn alert-info" data-dismiss="modal">Close</button>
+        </div>
+
+
+    }
+</div>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery3.1.js"></script>
+<script src="~/Scripts/bootbox.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script>
+            $('#Fromdate1').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                daysOfWeekDisabled: "0",
+                autoclose: true,
+                todayHighlight: true
+            });
+            $('#Todate1').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                daysOfWeekDisabled: "0",
+                autoclose: true,
+                todayHighlight: true
+            });
+            function parseDate(str) {
+                var mdy = str.split('/');
+                return new Date(mdy[2], mdy[1] - 1, mdy[0]);
+            }
+            function daydiff(first, second) {
+                return Math.round((second - first) / (1000 * 60 * 60 * 24));
+            }
+            $("#noDays1").click(function () {
+                $("#noDays1").val((daydiff(parseDate($('#Fromdate1').val()), parseDate($('#Todate1').val()))));
+            });
+            $("#editUpdate").click(function () {
+                
+                var dto = $("#FormEdit").serializeArray();
+                    $.ajax({
+                        url: '@Url.Action("editUpdate","User")',
+                        type: 'Post',
+                        data: dto,
+                        success: function (data) {
+                            if (data != null) {
+                                $("#details").empty();
+                                $("#details").html(data);
+                            }
+                        },
+                        error: function (dataReturn) {
+
+                        }
+                    })
+
+            });
+
+    </script>       

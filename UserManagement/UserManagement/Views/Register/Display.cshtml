@@ -1,0 +1,38 @@
+﻿@using UserManagement.Models
+@model List<UserDetails>
+
+<html>
+<body>
+    <h2>Display</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <td>&nbsp;</td>
+            <th>Age</th>
+            <td>&nbsp;</td>
+            <th>Band</th>
+            <td>&nbsp;</td>
+            <th>Department</th>
+        </tr>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Age</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Band</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Department</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

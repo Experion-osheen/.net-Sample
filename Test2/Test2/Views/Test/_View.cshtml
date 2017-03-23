@@ -1,0 +1,104 @@
+﻿@using DTOS
+@model List<EmployeeDto>
+
+<html>
+<body>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <h2>User Details</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Age</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Band</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Department</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <th>Delete/Edit</th>
+
+        </tr>
+        <tbody>
+            @if (Model != null)
+            {
+                int i = 0;
+                foreach (var item in Model)
+                {
+                    <tr><td>&nbsp;</td></tr>
+                    i++;
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Age</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Band</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@item.Department</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <button type="button" onclick="RemoveUser('@item.Id')" class="btn alert-danger" id="Delete"><span class="glyphicon glyphicon-trash"></span></button>
+                            <button type="button" class="btn alert-info" data-toggle="modal" data-target="#myModal" onclick="EditUser('@item.Id')"><span class="glyphicon glyphicon-pencil"></span></button>
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+ 
+    <script>
+        function RemoveUser(id) {
+            console.log("hai")
+            bootbox.confirm("Are you sure you want to delete the record?", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteUser","Test")',
+                        type: 'Post',
+                        data: { Id: id },
+                        success: function (data) {
+                            if (data != null) {
+                                $("#details").empty();
+                                $("#details").html(data);
+                            }
+                        },
+                        error: function (dataReturn) {
+
+                        }
+
+                    })
+                }
+            });
+        }
+        function EditUser(id) {
+            $.ajax({
+                url: '@Url.Action("EditUser","Test")',
+                type: 'Post',
+                data: { Id: id },
+                success: function (data) {
+                    if (data != null) {
+                        $("#EditModal").empty();
+                        $("#EditModal").html(data);
+                    }
+                },
+                error: function (dataReturn) {
+
+                }
+
+            })
+        }
+    </script>
+
+
+
+</body>
+</html>
